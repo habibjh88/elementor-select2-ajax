@@ -56,12 +56,16 @@ add_action( 'elementor/widgets/register', 'register_test_widget' );
 
 add_action( 'wp_ajax_rt_select2_object_search', 'select2_ajax_posts_filter_autocomplete' );
 add_action( 'wp_ajax_nopriv_rt_select2_object_search', 'select2_ajax_posts_filter_autocomplete' );
+//Set saved data to select2
+add_action( 'wp_ajax_rt_select2_get_title', 'select2_ajax_get_posts_value_titles' );
+add_action( 'wp_ajax_nopriv_rt_select2_get_title', 'select2_ajax_get_posts_value_titles' );
 
 function select2_ajax_posts_filter_autocomplete() {
 
-	$post_type   = 'post';
-	$source_name = 'post_type';
-	$paged       = $_POST['page'] ?? 1;
+	$query_per_page = 15;
+	$post_type      = 'post';
+	$source_name    = 'post_type';
+	$paged          = $_POST['page'] ?? 1;
 
 	if ( ! empty( $_POST['post_type'] ) ) {
 		$post_type = sanitize_text_field( $_POST['post_type'] );
@@ -101,24 +105,22 @@ function select2_ajax_posts_filter_autocomplete() {
 			$post_list = $users;
 			break;
 		default:
-			$post_list = get_query_data( $post_type, 30, $search, $paged );
+			$post_list = get_query_data( $post_type, $query_per_page, $search, $paged );
 	}
 
-	$pagination = false;
+	$pagination = true;
+	if ( count( $post_list ) < $query_per_page ) {
+		$pagination = false;
+	}
 	if ( ! empty( $post_list ) ) {
-		$pagination = true;
 		foreach ( $post_list as $key => $item ) {
 			$results[] = [ 'text' => $item, 'id' => $key ];
 		}
 	}
 	wp_send_json( [ 'results' => $results, 'pagination' => [ 'more' => $pagination ] ] );
-//	wp_send_json( [ 'results' => $results ] );
 }
 
 
-//Set saved data to select2
-add_action( 'wp_ajax_rt_select2_get_title', 'select2_ajax_get_posts_value_titles' );
-add_action( 'wp_ajax_nopriv_rt_select2_get_title', 'select2_ajax_get_posts_value_titles' );
 function select2_ajax_get_posts_value_titles() {
 
 	if ( empty( $_POST['id'] ) ) {
