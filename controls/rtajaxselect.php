@@ -24,6 +24,27 @@ class RTSelect2 extends \Elementor\Base_Data_Control {
 			]
 		);
 		wp_enqueue_script( 'rt-select2' );
+		?>
+        <style>
+            .rt-select2-main-wrapper ul.select2-selection__rendered li:last-child {
+                pointer-events: none;
+            }
+
+            .rt-select2-main-wrapper ul.select2-selection__rendered li:last-child::before {
+                background: var(--e-a-btn-bg);
+                content: '+';
+                padding: 1px 5px;
+                position: relative;
+                top: 1px;
+                margin-right: 5px;
+                color: #fff;
+            }
+
+            .rt-select2-main-wrapper ul.select2-selection__rendered li[title=search] {
+                display: none;
+            }
+        </style>
+		<?php
 	}
 
 	protected function get_default_settings() {
@@ -39,15 +60,16 @@ class RTSelect2 extends \Elementor\Base_Data_Control {
 	public function content_template() {
 		$control_uid = $this->get_control_uid();
 		?>
+
         <# var controlUID = '<?php echo esc_html( $control_uid ); ?>'; #>
         <# var currentID = elementor.panel.currentView.currentPageView.model.attributes.settings.attributes[data.name]; #>
-        <div class="elementor-control-field">
+        <div class="elementor-control-field rt-select2-main-wrapper">
             <# if ( data.label ) { #>
             <label for="<?php echo esc_attr( $control_uid ); ?>" class="elementor-control-title">{{{data.label }}}</label>
             <# } #>
             <div class="elementor-control-input-wrapper elementor-control-unit-5">
                 <# var multiple = ( data.multiple ) ? 'multiple' : ''; #>
-                <select id="<?php echo esc_attr( $control_uid ); ?>" {{ multiple }} class="ea-select2" data-setting="{{ data.name }}"></select>
+                <select id="<?php echo esc_attr( $control_uid ); ?>" {{ multiple }} class="rt-select2" data-setting="{{ data.name }}"></select>
             </div>
         </div>
         <#

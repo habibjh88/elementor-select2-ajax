@@ -5,6 +5,7 @@
 		setTimeout(function () {
 			var IDSelect2 = $(rtSelect).select2({
 				minimumInputLength: obj.data.minimum_input_length,
+				// allowClear: true,
 				ajax: {
 					url: rtSelect2Obj.ajaxurl,
 					dataType: 'json',
@@ -12,7 +13,7 @@
 					method: "POST",
 					data: function (params) {
 						return {
-							action:'rt_select2_object_search',
+							action: 'rt_select2_object_search',
 							post_type: obj.data.source_type,
 							source_name: obj.data.source_name,
 							search: params.term,
@@ -21,11 +22,10 @@
 					},
 				},
 				initSelection: function (element, callback) {
-					// console.log(element)
 					if (!obj.multiple) {
 						callback({id: '', text: rtSelect2Obj.search_text});
 					} else {
-						callback({id: '', text: ''});
+						callback({id: 9999, text: 'search'});
 					}
 					var ids = [];
 					if (!Array.isArray(obj.currentID) && obj.currentID != '') {
@@ -77,18 +77,20 @@
 					}
 				});
 
+
+				//TODO: If you need you can use the below event for on select
+				/*
 				$(rtSelect).on("select2:select", function (evt) {
-					var element = evt.params.data.element;
-					var $element = $(element);
-
-					$element.detach();
-					$(this).append($element);
-					$(this).trigger("change");
+					setTimeout(function () {
+						var selectUl = IDSelect2.next().children().children().children();
+						selectUl.remove('li.select2-selection__e-plus-button');
+						var lastLi = selectUl.children().last();
+						$(icon).insertBefore(lastLi)
+					}, 200);
 				});
+				*/
+
 			}, 200);
-
-
-			//Manual Sorting : Select2 drag and drop : ends
 
 		}, 100);
 

@@ -104,12 +104,14 @@ function select2_ajax_posts_filter_autocomplete() {
 			$post_list = get_query_data( $post_type, 30, $search, $paged );
 	}
 
+	$pagination = false;
 	if ( ! empty( $post_list ) ) {
+		$pagination = true;
 		foreach ( $post_list as $key => $item ) {
 			$results[] = [ 'text' => $item, 'id' => $key ];
 		}
 	}
-	wp_send_json( [ 'results' => $results, 'pagination' => [ 'more' => true ] ] );
+	wp_send_json( [ 'results' => $results, 'pagination' => [ 'more' => $pagination ] ] );
 //	wp_send_json( [ 'results' => $results ] );
 }
 

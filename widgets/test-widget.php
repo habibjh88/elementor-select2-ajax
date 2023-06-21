@@ -90,6 +90,20 @@ class Elementor_Test_Widget extends \Elementor\Widget_Base {
 		return [ 'test', 'emoji' ];
 	}
 
+	function rt_category_list() {
+		$all_post = get_posts( [
+			'post_type'      => 'post',
+			'posts_per_page' => - 1,
+			'post_status'    => 'publish',
+		] );
+		$lists    = [];
+		foreach ( $all_post as $p ) {
+			$lists[ $p->ID ] = $p->post_title;
+		}
+
+		return $lists;
+	}
+
 	/**
 	 * Register test widget controls.
 	 *
@@ -129,20 +143,34 @@ class Elementor_Test_Widget extends \Elementor\Widget_Base {
 					'description' => esc_html__( 'Description', 'elementor-select2-ajax' ),
 					'button'      => esc_html__( 'Button', 'elementor-select2-ajax' ),
 				],
-				'default'     => [ 'title', 'description' ],
 			]
 		);
+
+		//
+//		$this->add_control(
+//			'post_lists',
+//			[
+//				'label'       => __( 'Choose Posts', 'homlisti-core' ),
+//				'type'        => \Elementor\Controls_Manager::SELECT2,
+//				'multiple'    => true,
+//				'options'     => $this->rt_category_list(),
+//				'label_block' => true,
+//			]
+//		);
+
+
 
 
 		$this->add_control(
 			'rt_product_gallery_tag', [
-				'label'                => __( 'Product Tags Test', 'textdomain' ),
-				'type'                 => 'rt-select2',
-				'source_name'          => 'post_type', //post_type, taxonomy, user
-				'source_type'          => 'post',
-				'multiple'             => false,
+				'label'       => __( 'Choose posts', 'textdomain' ),
+				'type'        => 'rt-select2',
+				'source_name' => 'post_type', //post_type, taxonomy, user
+				'source_type' => 'post',
+				'multiple'    => true,
 			]
 		);
+
 
 
 		$this->end_controls_section();
